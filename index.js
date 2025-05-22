@@ -243,6 +243,17 @@ router.put('/parts/:id', authenticateToken, authorizeRoles('admin'), async (req,
   });
   res.json(part);
 });
+// Customer: View spare parts (read-only)
+router.get('/customer/parts', authenticateToken, authorizeRoles('customer'), async (req, res) => {
+  try {
+    const parts = await prisma.sparePart.findMany();
+    res.json(parts);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Failed to fetch parts' });
+  }
+});
+
 
 // Mount router
 app.use('/api', router);
